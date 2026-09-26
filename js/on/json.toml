@@ -4,3 +4,7 @@ name = "json"
 [[version]]
 version = "0.1.0"
 source = { git = "https://github.com/komp-co/json", rev = "f1bd0aee61045540f52524d793c075cbb091cb2e" }
+
+[[version]]
+version = "0.2.0"
+source = { git = "https://github.com/komp-co/json.git", rev = "44a09fc776814a7aa1871619f1c1b5786a9d5b43" }
