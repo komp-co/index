@@ -1,0 +1,6 @@
+schema = 1
+name = "json"
+
+[[version]]
+version = "0.1.0"
+source = { git = "https://github.com/komp-co/json", rev = "f1bd0aee61045540f52524d793c075cbb091cb2e" }
