@@ -1,0 +1,8 @@
+# Who may publish new versions of a package without a maintainer's review.
+#
+#   package = ["github-login", ...]
+#
+# A pull request that only appends [[version]] blocks to packages listing its
+# author merges itself once the entries check. Adding a package, editing a
+# published version, or changing this file always waits for a maintainer.
+json = ["TorosBenjamin"]
