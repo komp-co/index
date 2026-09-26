@@ -53,8 +53,28 @@ yanked = true
 
 ## Adding a package or a version
 
-Open a pull request that adds the file, or appends a `[[version]]` to it.
-A maintainer of the komp-co organisation approves every new package name; a
-new version of an existing package is reviewed the same way. Before approving,
-the reviewer checks that the source fetches, that a tarball matches its
-checksum, and that `komp check` passes on the crate at that source.
+In the package's repository, with the version in `kf.toml` tagged `vX.Y.Z`
+and pushed:
+
+```console
+$ komp publish
+```
+
+It writes the entry, pinned to the tagged commit, and opens the pull request
+here through `gh`; `komp publish --status` shows where it stands. A pull
+request written by hand is checked the same way.
+
+Every pull request is checked by `.github/workflows/check-entries.yml` with the
+latest released komp: each new version is fetched at its pinned commit or
+checksum, must be the package and version its entry says, and must pass
+`komp check`. Then:
+
+- **A trusted version bump merges itself**: a pull request that only appends
+  versions to packages whose line in [`trusted.toml`](trusted.toml) names its
+  author.
+- **Everything else waits for a maintainer** of the komp-co organisation: a new
+  package, an edit to a published version, a change to `trusted.toml`, this
+  README or the checks. A maintainer approves every new package name.
+
+A pull request cannot change how it is judged: the checks run as they are on
+`main`, and never run anything from the pull request.

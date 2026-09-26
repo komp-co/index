@@ -1,0 +1,91 @@
+name: Check entries
+
+# Every pull request's new versions are fetched at their pinned source and
+# checked with the latest released komp. A pull request that only adds
+# versions to packages trusting its author merges itself; anything else
+# waits for a maintainer.
+#
+# CONSTRAINT: `pull_request_target` runs this file and the script as they are
+# on the base branch, so a pull request cannot change how it is judged, and
+# nothing from the pull request is ever run: its files are read with
+# `git show`. RELEASE_TOKEN is only in the environment of the merge step.
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: check-entries-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Fetch the pull request as data
+        env:
+          PR: ${{ github.event.pull_request.number }}
+        run: git fetch -q origin "+refs/pull/$PR/head:refs/remotes/pr/head"
+
+      - name: Build the latest released komp
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag=$(gh release view --repo komp-co/komp --json tagName --jq .tagName)
+          seed="https://github.com/komp-co/komp/releases/download/$tag/kflat-seed-${tag#v}.tar.gz"
+          git clone -q --depth 1 --branch "$tag" https://github.com/komp-co/komp "$RUNNER_TEMP/komp"
+          curl -fsSL -o "$RUNNER_TEMP/seed.tar.gz" "$seed"
+          want=$(curl -fsSL "$seed.sha256" | cut -d' ' -f1)
+          [ "$(sha256sum "$RUNNER_TEMP/seed.tar.gz" | cut -d' ' -f1)" = "$want" ]
+          mkdir "$RUNNER_TEMP/seed" "$RUNNER_TEMP/komp/bin"
+          tar -xzf "$RUNNER_TEMP/seed.tar.gz" -C "$RUNNER_TEMP/seed" --strip-components=1
+          cc -O2 -o "$RUNNER_TEMP/komp/bin/komp" "$RUNNER_TEMP/seed/komp.c"
+          cc -O2 -o "$RUNNER_TEMP/komp/bin/kflatc" "$RUNNER_TEMP/seed/kflatc.c"
+          echo "KOMP=$RUNNER_TEMP/komp/bin/komp" >> "$GITHUB_ENV"
+          "$RUNNER_TEMP/komp/bin/komp" version
+
+      - name: Check the entries
+        id: check
+        env:
+          AUTHOR: ${{ github.event.pull_request.user.login }}
+        run: |
+          base=$(git merge-base HEAD refs/remotes/pr/head)
+          status=0
+          verdict=$(bash .github/scripts/check-entries.sh "$base" refs/remotes/pr/head "$AUTHOR" "$KOMP" \
+            2> "$RUNNER_TEMP/log") || status=$?
+          cat "$RUNNER_TEMP/log" >&2
+          {
+            echo '```'
+            grep -E '^(ok|review|invalid):' "$RUNNER_TEMP/log" || true
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+          if [ "$status" -ne 0 ]; then
+            echo "An entry is invalid; see the lines marked \`invalid\`." >> "$GITHUB_STEP_SUMMARY"
+            exit "$status"
+          fi
+          if [ "$verdict" = review ]; then
+            echo "Valid; waits for a maintainer's review and merge." >> "$GITHUB_STEP_SUMMARY"
+          fi
+          echo "verdict=$verdict" >> "$GITHUB_OUTPUT"
+
+      - name: Merge a trusted version bump
+        if: steps.check.outputs.verdict == 'trusted'
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+          PR: ${{ github.event.pull_request.number }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          if [ -z "$GH_TOKEN" ]; then
+            echo "::warning::RELEASE_TOKEN is not shared with this repository; merge by hand"
+            exit 0
+          fi
+          gh pr merge "$PR" --repo "$REPOSITORY" --merge --match-head-commit "$HEAD_SHA"
+          echo "Trusted version bump: merged." >> "$GITHUB_STEP_SUMMARY"
