@@ -5,7 +5,8 @@
 #   check-entries.sh BASE HEAD AUTHOR KOMP
 #
 # Every new [[version]] is fetched at its pinned commit or checksum, must
-# name the package and version its entry says, and must pass `komp check`.
+# name the package and version its entry says, and must check as a
+# dependency of a new project.
 # Prints the verdict last:
 #
 #   trusted   only new versions of existing packages whose line in the
@@ -106,8 +107,25 @@ check_version() {
     [ -f "$root/kf.toml" ] || { invalid "$what: its source has no kf.toml at its root"; return; }
     [ "$(manifest_field "$root" name)" = "$name" ] || { invalid "$what: its kf.toml names another crate"; return; }
     [ "$(manifest_field "$root" version)" = "$version" ] || { invalid "$what: its kf.toml has another version"; return; }
-    "$komp" check "$root" >&2 || { invalid "$what: komp check failed"; return; }
+    checks_as_dependency "$name" "$git" "$rev" "$tarball" "$checksum" || { invalid "$what: komp check failed"; return; }
     say "ok: $what"
+}
+
+# A project depending on the version, checked as a user's would be: komp
+# fetches it into a cache, where its own `core`, `alloc` and `std` are the
+# ones bundled with komp, and compiles it as a dependency.
+checks_as_dependency() {
+    local name=$1 git=$2 rev=$3 tarball=$4 checksum=$5 probe libs row
+    probe=$(mktemp -d "$work/probe.XXXXXX")
+    libs=$(cd "$(dirname "$komp")/../libs" && pwd)
+    if [ -n "$git" ]; then row="$name = { git = \"$git\", rev = \"$rev\" }"
+    else row="$name = { tarball = \"$tarball\", checksum = \"$checksum\" }"
+    fi
+    mkdir "$probe/src"
+    printf '[project]\nname = "index_probe"\nkind = "lib"\n\n[dependencies]\n%s\ncore = { path = "%s/core" }\nalloc = { path = "%s/alloc" }\n' \
+        "$row" "$libs" "$libs" > "$probe/kf.toml"
+    printf 'pub fun index_probe(): int32 { return 0 }\n' > "$probe/src/lib.kf"
+    KFLAT_CACHE="$work/cache" "$komp" check "$probe" >&2
 }
 
 while IFS=$'\t' read -r status path rest; do
