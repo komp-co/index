@@ -1,0 +1,6 @@
+schema = 1
+name = "komp_fmt"
+
+[[version]]
+version = "0.1.0"
+source = { git = "https://github.com/komp-co/komp-fmt", rev = "f013620f0088bdeeedbeb89cbb478568ddecea47" }
