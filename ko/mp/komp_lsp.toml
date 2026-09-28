@@ -1,0 +1,7 @@
+schema = 1
+name = "komp_lsp"
+description = "The KFlat language server; editors start it with `komp lsp`"
+
+[[version]]
+version = "0.1.0"
+source = { git = "https://github.com/komp-co/kf-lsp", rev = "e0e12e3a48fa3722e4d4bede76ffcef5eb2a27fc" }
