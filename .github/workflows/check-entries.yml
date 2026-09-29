@@ -49,7 +49,7 @@ jobs:
           cc -O2 -o "$RUNNER_TEMP/komp/bin/komp" "$RUNNER_TEMP/seed/komp.c"
           cc -O2 -o "$RUNNER_TEMP/komp/bin/kflatc" "$RUNNER_TEMP/seed/kflatc.c"
           echo "KOMP=$RUNNER_TEMP/komp/bin/komp" >> "$GITHUB_ENV"
-          "$RUNNER_TEMP/komp/bin/komp" version
+          "$RUNNER_TEMP/komp/bin/komp" --version
 
       - name: Check the entries
         id: check
