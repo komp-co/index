@@ -5,3 +5,7 @@ description = "The KFlat language server; editors start it with `komp lsp`"
 [[version]]
 version = "0.1.0"
 source = { git = "https://github.com/komp-co/kf-lsp", rev = "e0e12e3a48fa3722e4d4bede76ffcef5eb2a27fc" }
+
+[[version]]
+version = "0.2.0"
+source = { git = "https://github.com/komp-co/kf-lsp", rev = "6626d777b62b3567b6cd00063659b230939d6113" }
