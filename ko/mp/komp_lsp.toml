@@ -9,3 +9,11 @@ source = { git = "https://github.com/komp-co/kf-lsp", rev = "e0e12e3a48fa3722e4d
 [[version]]
 version = "0.2.0"
 source = { git = "https://github.com/komp-co/kf-lsp", rev = "6626d777b62b3567b6cd00063659b230939d6113" }
+
+[[version]]
+version = "0.3.0"
+source = { git = "https://github.com/komp-co/kf-lsp", rev = "0ce11ce10a4f9dbc40155ecaaaaba9fa42f46ad8" }
+
+[[version]]
+version = "0.4.0"
+source = { git = "https://github.com/komp-co/kf-lsp", rev = "b2cb56f6b360aa246507816f6ba6981f8c5b738d" }
