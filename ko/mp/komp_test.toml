@@ -1,0 +1,7 @@
+schema = 1
+name = "komp_test"
+description = "Test runner for KFlat, and `testing`, the library tests are written against"
+
+[[version]]
+version = "0.1.0"
+source = { git = "https://github.com/komp-co/komp-test", rev = "d27fe77226d6666cdbf459e4823eed74a0c890c2" }
