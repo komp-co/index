@@ -8,3 +8,7 @@ source = { git = "https://github.com/komp-co/json", rev = "f1bd0aee61045540f5252
 [[version]]
 version = "0.2.0"
 source = { git = "https://github.com/komp-co/json.git", rev = "44a09fc776814a7aa1871619f1c1b5786a9d5b43" }
+
+[[version]]
+version = "0.2.1"
+source = { git = "https://github.com/komp-co/json", rev = "42171d5f4a9cd7f2b4a9fd5143d18d872cfce92d" }
