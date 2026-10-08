@@ -49,6 +49,12 @@ yanked = true
   `core`, `alloc` and `std` come with komp and are never listed.
 - `yanked = true` keeps a version resolvable for projects that already lock
   it, and hides it from new resolution.
+- `kind = "toolchain"`, in the header, makes every version a kflat release
+  archive rather than a crate: a `tarball` with its `checksum`, holding
+  `kflat-<version>/install.sh`. `komp toolchain install` and a project's
+  `kflat` pin install from it, and no project can depend on it. `kflatc`, the
+  compiler, is the one toolchain; kf-lang's release workflow appends each
+  release.
 - Versions are appended, never edited: a published version is immutable.
 
 ## Adding a package or a version

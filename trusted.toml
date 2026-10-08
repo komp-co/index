@@ -6,4 +6,5 @@
 # author merges itself once the entries check. Adding a package, editing a
 # published version, or changing this file always waits for a maintainer.
 json = ["TorosBenjamin"]
+kflatc = ["TorosBenjamin"]
 komp_fmt = ["TorosBenjamin"]
