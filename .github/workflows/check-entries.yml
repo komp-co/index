@@ -34,12 +34,25 @@ jobs:
           PR: ${{ github.event.pull_request.number }}
         run: git fetch -q origin "+refs/pull/$PR/head:refs/remotes/pr/head"
 
-      - name: Build the latest released komp
+      # komp's own releases are a binary and an install.sh, which also installs
+      # the newest toolchain from this index; earlier ones were a seed holding
+      # komp and kflatc as C.
+      - name: Install the latest released komp
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           tag=$(gh release view --repo komp-co/komp --json tagName --jq .tagName)
-          seed="https://github.com/komp-co/komp/releases/download/$tag/kflat-seed-${tag#v}.tar.gz"
+          version=${tag#v}
+          if gh release view "$tag" --repo komp-co/komp --json assets --jq '.assets[].name' |
+              grep -qx "komp-$version-linux-x86_64.tar.gz"; then
+            export KFLAT_HOME="$RUNNER_TEMP/kflat"
+            curl -fsSL "https://github.com/komp-co/komp/releases/download/$tag/install.sh" |
+              KOMP_VERSION="$version" sh
+            echo "KOMP=$KFLAT_HOME/bin/komp" >> "$GITHUB_ENV"
+            "$KFLAT_HOME/bin/komp" --version
+            exit 0
+          fi
+          seed="https://github.com/komp-co/komp/releases/download/$tag/kflat-seed-$version.tar.gz"
           git clone -q --depth 1 --branch "$tag" https://github.com/komp-co/komp "$RUNNER_TEMP/komp"
           curl -fsSL -o "$RUNNER_TEMP/seed.tar.gz" "$seed"
           want=$(curl -fsSL "$seed.sha256" | cut -d' ' -f1)

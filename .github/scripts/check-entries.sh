@@ -6,7 +6,9 @@
 #
 # Every new [[version]] is fetched at its pinned commit or checksum, must
 # name the package and version its entry says, and must check as a
-# dependency of a new project.
+# dependency of a new project. A toolchain's (`kind = "toolchain"`) is a
+# kflat release archive instead, holding kflat-<version>/install.sh and the
+# VERSION it installs.
 # Prints the verdict last:
 #
 #   trusted   only new versions of existing packages whose line in the
@@ -89,6 +91,24 @@ allowed_url() {
     esac
 }
 
+# A toolchain release archive, as `komp toolchain install` takes it.
+check_toolchain_version() {
+    local name=$1 line=$2 version git rev tarball checksum dir
+    IFS='|' read -r version git rev tarball checksum <<< "$line"
+    local what="$name $version"
+    [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || { invalid "$what: version is not MAJOR.MINOR.PATCH"; return; }
+    [ -z "$git" ] && [ -n "$tarball" ] || { invalid "$what: a toolchain's source is a tarball"; return; }
+    allowed_url "$tarball" || { invalid "$what: tarball must be an https:// URL"; return; }
+    [[ "$checksum" =~ ^sha256:[0-9a-f]{64}$ ]] || { invalid "$what: checksum must be sha256:<64 hex digits>"; return; }
+    dir=$(mktemp -d "$work/toolchain.XXXXXX")
+    curl -fsSL -o "$dir.tar.gz" "$tarball" || { invalid "$what: its archive could not be fetched"; return; }
+    [ "sha256:$(sha256sum "$dir.tar.gz" | cut -d' ' -f1)" = "$checksum" ] || { invalid "$what: checksum mismatch"; return; }
+    tar -xzf "$dir.tar.gz" -C "$dir" "kflat-$version/install.sh" "kflat-$version/VERSION" 2> /dev/null ||
+        { invalid "$what: its archive holds no kflat-$version/install.sh and VERSION"; return; }
+    [ "$(cat "$dir/kflat-$version/VERSION")" = "$version" ] || { invalid "$what: its archive installs another version"; return; }
+    say "ok: $what"
+}
+
 check_version() {
     local name=$1 line=$2 version git rev tarball checksum root
     IFS='|' read -r version git rev tarball checksum <<< "$line"
@@ -117,7 +137,8 @@ check_version() {
 checks_as_dependency() {
     local name=$1 git=$2 rev=$3 tarball=$4 checksum=$5 probe libs row
     probe=$(mktemp -d "$work/probe.XXXXXX")
-    libs=$(cd "$(dirname "$komp")/../libs" && pwd)
+    # The libraries beside the kflatc komp runs, through the link an install leaves.
+    libs=$(cd "$(dirname "$(readlink -f "$(dirname "$komp")/kflatc")")/../libs" && pwd)
     if [ -n "$git" ]; then row="$name = { git = \"$git\", rev = \"$rev\" }"
     else row="$name = { tarball = \"$tarball\", checksum = \"$checksum\" }"
     fi
@@ -159,8 +180,10 @@ while IFS=$'\t' read -r status path rest; do
     trusts "$name" "$author" || needs_review "$author is not trusted to publish $name"
     blocks=$(version_blocks <<< "$appended")
     [ -n "$blocks" ] || needs_review "$path adds no version"
+    check=check_version
+    grep -q '^kind = "toolchain"$' <<< "$new" && check=check_toolchain_version
     while IFS= read -r line; do
-        [ -n "$line" ] && check_version "$name" "$line"
+        [ -n "$line" ] && "$check" "$name" "$line"
     done <<< "$blocks"
 done < <(git diff --no-renames --name-status "$base" "$head")
 
