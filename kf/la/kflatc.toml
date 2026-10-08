@@ -1,0 +1,119 @@
+schema = 1
+name = "kflatc"
+description = "The KFlat compiler: komp toolchain install builds one from its release archive"
+kind = "toolchain"
+
+[[version]]
+version = "0.6.0"
+source = { tarball = "https://github.com/komp-co/komp/releases/download/v0.6.0/kflat-0.6.0.tar.gz" }
+checksum = "sha256:ccfa5fc799b1f367778707a941898f06fb7e71aa56c43caf6d3fc08da50aa45c"
+
+[[version]]
+version = "0.7.0"
+source = { tarball = "https://github.com/komp-co/komp/releases/download/v0.7.0/kflat-0.7.0.tar.gz" }
+checksum = "sha256:70181428d194964f50aaf53b01f081a661a61d3de6f08677e8b70bb7cd019704"
+
+[[version]]
+version = "0.8.0"
+source = { tarball = "https://github.com/komp-co/komp/releases/download/v0.8.0/kflat-0.8.0.tar.gz" }
+checksum = "sha256:9cff0b75bf54466af25b8a54417325f59774c39a98189c8559f3f650cf96792e"
+
+[[version]]
+version = "0.9.0"
+source = { tarball = "https://github.com/komp-co/komp/releases/download/v0.9.0/kflat-0.9.0.tar.gz" }
+checksum = "sha256:c3f3928561062c347878d907990cb844e10bc2f6a36197181a4de33d768216f6"
+
+[[version]]
+version = "0.10.0"
+source = { tarball = "https://github.com/komp-co/komp/releases/download/v0.10.0/kflat-0.10.0.tar.gz" }
+checksum = "sha256:9de3ce7a535bd58cb94c0f5adf6f31f8dce7e9946989dc5374cf15783c586eee"
+
+[[version]]
+version = "0.11.0"
+source = { tarball = "https://github.com/komp-co/komp/releases/download/v0.11.0/kflat-0.11.0.tar.gz" }
+checksum = "sha256:ec012db53a12d159668c215f92d7085ed382f287659a009d30579d43bf23e316"
+
+[[version]]
+version = "0.12.0"
+source = { tarball = "https://github.com/komp-co/komp/releases/download/v0.12.0/kflat-0.12.0.tar.gz" }
+checksum = "sha256:748eb23f9dcafc951b8a86c777303f3a0cb13e1148f8949d9f937790ba9aebfe"
+
+[[version]]
+version = "0.13.0"
+source = { tarball = "https://github.com/komp-co/komp/releases/download/v0.13.0/kflat-0.13.0.tar.gz" }
+checksum = "sha256:2c375ee2edd2bb2c2bf9810dc877795f60c93c497708d85beb81574c69f6e6b2"
+
+[[version]]
+version = "0.14.0"
+source = { tarball = "https://github.com/komp-co/komp/releases/download/v0.14.0/kflat-0.14.0.tar.gz" }
+checksum = "sha256:bbb92d0feafb8c33cc16cad4b51afb434a8f75c7857b9a3c33e2e0990daace7b"
+
+[[version]]
+version = "0.15.0"
+source = { tarball = "https://github.com/komp-co/komp/releases/download/v0.15.0/kflat-0.15.0.tar.gz" }
+checksum = "sha256:3f12259582ba0c97b65e0487ccf9e25b6e9f948fb87d60b3d949f8340c9a621b"
+
+[[version]]
+version = "0.16.0"
+source = { tarball = "https://github.com/komp-co/komp/releases/download/v0.16.0/kflat-0.16.0.tar.gz" }
+checksum = "sha256:78de4f3e2f1cb415a00381ac62e00bf2879689f6daaad9ad7fc96f7232073c8c"
+
+[[version]]
+version = "0.17.0"
+source = { tarball = "https://github.com/komp-co/komp/releases/download/v0.17.0/kflat-0.17.0.tar.gz" }
+checksum = "sha256:ce5e6e2c5a7af753ec6569e91af25dacf1dbba537f9989dc94ba62bf330b33cd"
+
+[[version]]
+version = "0.18.0"
+source = { tarball = "https://github.com/komp-co/komp/releases/download/v0.18.0/kflat-0.18.0.tar.gz" }
+checksum = "sha256:29e0ef93c353d546232b4010619eafbd08d4d2642115b231232f094f3f07320b"
+
+[[version]]
+version = "0.19.0"
+source = { tarball = "https://github.com/komp-co/komp/releases/download/v0.19.0/kflat-0.19.0.tar.gz" }
+checksum = "sha256:f8afe853899c94ad5181f2976bd7d3fe95615ea33fabeb9dcf308d10d188510a"
+
+[[version]]
+version = "0.20.0"
+source = { tarball = "https://github.com/komp-co/komp/releases/download/v0.20.0/kflat-0.20.0.tar.gz" }
+checksum = "sha256:f9c7e1abaea7da153a3c2026565d1de360b71b81af4126f76aa5e69fb3987bd2"
+
+[[version]]
+version = "0.21.0"
+source = { tarball = "https://github.com/komp-co/komp/releases/download/v0.21.0/kflat-0.21.0.tar.gz" }
+checksum = "sha256:6cb2632b660b4a8cda10ab2574a10d2028a2f907016f65263432191818e0c41d"
+
+[[version]]
+version = "0.22.0"
+source = { tarball = "https://github.com/komp-co/komp/releases/download/v0.22.0/kflat-0.22.0.tar.gz" }
+checksum = "sha256:53466d40f77d5132da511f1895f41751ddfbbdd7b7bf469a895f57641f79d9f2"
+
+[[version]]
+version = "0.23.0"
+source = { tarball = "https://github.com/komp-co/komp/releases/download/v0.23.0/kflat-0.23.0.tar.gz" }
+checksum = "sha256:b2319f7432bd7a2fed371e9900e53dcffa908bcfd73b20677caa5f62ccaf3969"
+
+[[version]]
+version = "0.24.0"
+source = { tarball = "https://github.com/komp-co/kf-lang/releases/download/v0.24.0/kflat-0.24.0.tar.gz" }
+checksum = "sha256:10f83c524fb36a2d67c47a31ffd2e805bcaffdfdfaa058d990dce8e64b8fe52b"
+
+[[version]]
+version = "0.25.0"
+source = { tarball = "https://github.com/komp-co/kf-lang/releases/download/v0.25.0/kflat-0.25.0.tar.gz" }
+checksum = "sha256:04a672e237f9e657bd6e87791622039675f82950f6054a27f4e7f29ddd7eb7a8"
+
+[[version]]
+version = "0.26.0"
+source = { tarball = "https://github.com/komp-co/kf-lang/releases/download/v0.26.0/kflat-0.26.0.tar.gz" }
+checksum = "sha256:b2e779d93e0b5141f384b51cdbd6c5242e0cc97586d959432734546495c60d81"
+
+[[version]]
+version = "0.27.0"
+source = { tarball = "https://github.com/komp-co/kf-lang/releases/download/v0.27.0/kflat-0.27.0.tar.gz" }
+checksum = "sha256:2e1f0ce6541dbc62e161851fddf2d4a3751a2a2171cc0e438dafb215dbf8cabe"
+
+[[version]]
+version = "0.28.0"
+source = { tarball = "https://github.com/komp-co/kf-lang/releases/download/v0.28.0/kflat-0.28.0.tar.gz" }
+checksum = "sha256:1c8a2b230aa14bedf22578310017fe4ec8231032dac03d90941e25899dcd0706"
